@@ -1,0 +1,8 @@
+*/nbproject/private/
+*/build/
+#/Base v1/
+# Compiled class file
+*.class
+
+# Log file
+*.log
