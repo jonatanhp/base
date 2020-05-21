@@ -5,12 +5,24 @@
  */
 package igu.compras;
 
+import data.CienteData;
+import entites.Cliente;
+import igu.alertas.principal.ErrorAlert;
 import igu.princ.Validate;
 import javax.swing.ListSelectionModel;
 
 import igu.tablas.EstiloTablaHeader;
 import igu.tablas.EstiloTablaRenderer;
 import igu.tablas.MyScrollbarUI;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Asullom
@@ -22,14 +34,73 @@ public class ComprasPanel extends javax.swing.JPanel {
      */
     public ComprasPanel() {
         initComponents();
-        
+
         this.tabla.getTableHeader().setDefaultRenderer(new EstiloTablaHeader());
         this.tabla.setDefaultRenderer(Object.class, new EstiloTablaRenderer());
         this.tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jScrollPane1.getViewport().setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.getVerticalScrollBar().setUI(new MyScrollbarUI());
         jScrollPane1.getHorizontalScrollBar().setUI(new MyScrollbarUI());
-        //((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        // ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        this.id.setText("");
+        paintTable("");
+
+        ListSelectionModel cellSelectionModel = tabla.getSelectionModel();
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+            public void valueChanged(ListSelectionEvent e) {
+                if (tabla.getRowCount() > 0) {
+                    int[] row = tabla.getSelectedRows();
+                    if (row.length > 0) {
+                        String ids = (String) tabla.getValueAt(row[0], 0);
+                        id.setText("" + ids);
+                        String nombress = (String) tabla.getValueAt(row[0], 1);
+                        nombres.setText("" + nombress);
+                        String infoadics = (String) tabla.getValueAt(row[0], 2);
+                        infoadic.setText("" + infoadics);
+                        System.out.println("Table element selected es: " + ids);
+                        guardarButton.setText("MODIFICAR");
+                    }
+                } else {
+                    System.out.println("eee");
+                }
+            }
+
+        });
+
+    }
+
+    private void paintTable(String buscar) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        List<Cliente> lis = CienteData.list(buscar);
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
+        }
+        String datos[] = new String[lis.size()];
+        for (Cliente d : lis) {
+            //modelo.addRow(new Object[]{d.getId(), d.getNombres(), d.getInfoadic()});
+            datos[0] = d.getId() + "";
+            datos[1] = d.getNombres();
+            datos[2] = d.getInfoadic();
+            modelo.addRow(datos);
+        }
+    }
+/*
+    public static void seleccionaFila(String id) {
+        for (int i = 0; i < tabla.getRowCount(); i++) {
+            if (id.equals(tabla.getValueAt(i, 0).toString())) {
+                tabla.setRowSelectionInterval(i, i);
+                break;
+            }
+        }
+    }*/
+
+    private void limpiarCampos() {
+        this.nombres.requestFocus();
+        this.nombres.setText("");
+        this.infoadic.setText("");
+        paintTable("");
+
     }
 
     /**
@@ -53,14 +124,15 @@ public class ComprasPanel extends javax.swing.JPanel {
         tabla = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
-        aSIconButton2 = new igu.buttons.ASIconButton();
-        aSIconButton3 = new igu.buttons.ASIconButton();
-        aSIconButton1 = new igu.buttons.ASIconButton();
+        nuevoButton = new igu.buttons.ASIconButton();
+        guardarButton = new igu.buttons.ASIconButton();
+        eliminarButton = new igu.buttons.ASIconButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        infoadic = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        nombresField = new javax.swing.JTextField();
+        nombres = new javax.swing.JTextField();
+        id = new javax.swing.JLabel();
 
         jPanel5.setBackground(new java.awt.Color(58, 159, 171));
 
@@ -70,6 +142,11 @@ public class ComprasPanel extends javax.swing.JPanel {
         jLabel1.setText("COMPRAS");
 
         buscarField.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        buscarField.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                buscarFieldKeyReleased(evt);
+            }
+        });
 
         aSIconButton4.setText("Excel");
         aSIconButton4.setColorHover(new java.awt.Color(0, 102, 102));
@@ -91,7 +168,7 @@ public class ComprasPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 402, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buscarField, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -101,10 +178,6 @@ public class ComprasPanel extends javax.swing.JPanel {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jLabel1)
-                .addContainerGap(42, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -112,6 +185,10 @@ public class ComprasPanel extends javax.swing.JPanel {
                     .addComponent(aSIconButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel4))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(27, 27, 27)
+                .addComponent(jLabel1)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(102, 255, 102));
@@ -137,7 +214,7 @@ public class ComprasPanel extends javax.swing.JPanel {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 386, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -163,40 +240,40 @@ public class ComprasPanel extends javax.swing.JPanel {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        aSIconButton2.setText("Nuevo");
-        aSIconButton2.setColorHover(new java.awt.Color(0, 102, 102));
-        aSIconButton2.setColorNormal(new java.awt.Color(153, 153, 153));
-        aSIconButton2.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        aSIconButton2.addActionListener(new java.awt.event.ActionListener() {
+        nuevoButton.setText("Nuevo");
+        nuevoButton.setColorHover(new java.awt.Color(0, 102, 102));
+        nuevoButton.setColorNormal(new java.awt.Color(153, 153, 153));
+        nuevoButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        nuevoButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aSIconButton2ActionPerformed(evt);
+                nuevoButtonActionPerformed(evt);
             }
         });
 
-        aSIconButton3.setText("Guardar");
-        aSIconButton3.setColorHover(new java.awt.Color(0, 102, 102));
-        aSIconButton3.setColorNormal(new java.awt.Color(153, 153, 153));
-        aSIconButton3.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        aSIconButton3.addActionListener(new java.awt.event.ActionListener() {
+        guardarButton.setText("Guardar");
+        guardarButton.setColorHover(new java.awt.Color(0, 102, 102));
+        guardarButton.setColorNormal(new java.awt.Color(153, 153, 153));
+        guardarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        guardarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aSIconButton3ActionPerformed(evt);
+                guardarButtonActionPerformed(evt);
             }
         });
 
-        aSIconButton1.setText("Eliminar");
-        aSIconButton1.setColorHover(new java.awt.Color(0, 102, 102));
-        aSIconButton1.setColorNormal(new java.awt.Color(153, 153, 153));
-        aSIconButton1.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        aSIconButton1.addActionListener(new java.awt.event.ActionListener() {
+        eliminarButton.setText("Elimininar");
+        eliminarButton.setColorHover(new java.awt.Color(0, 102, 102));
+        eliminarButton.setColorNormal(new java.awt.Color(153, 153, 153));
+        eliminarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        eliminarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                aSIconButton1ActionPerformed(evt);
+                eliminarButtonActionPerformed(evt);
             }
         });
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jTextArea1.setRows(5);
-        jScrollPane2.setViewportView(jTextArea1);
+        infoadic.setColumns(20);
+        infoadic.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        infoadic.setRows(5);
+        jScrollPane2.setViewportView(infoadic);
 
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel3.setText("Información adicional:");
@@ -204,7 +281,9 @@ public class ComprasPanel extends javax.swing.JPanel {
         jLabel2.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         jLabel2.setText("Nombres del cliente: ");
 
-        nombresField.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        nombres.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+
+        id.setText("id");
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -214,11 +293,11 @@ public class ComprasPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(aSIconButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(aSIconButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -226,26 +305,29 @@ public class ComprasPanel extends javax.swing.JPanel {
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nombresField)))
-                .addContainerGap(55, Short.MAX_VALUE))
+                        .addComponent(nombres)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(id)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(aSIconButton2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(aSIconButton3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(nombresField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(nombres, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(id))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(37, Short.MAX_VALUE))
+                .addContainerGap(36, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -297,29 +379,84 @@ public class ComprasPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void aSIconButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton1ActionPerformed
+    private void eliminarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_aSIconButton1ActionPerformed
+        System.out.println("id: " + this.id.getText());
+        int opcion = 0;
+        if (!this.id.getText().equals("")) {
+            System.out.println("DELETE ");
+            opcion = CienteData.eliminar(Integer.parseInt(this.id.getText()));
+        }
+        if (opcion != 0) {
+            // String fila = String.valueOf(CienteData.extraerID());
+            limpiarCampos();
+            this.id.setText("");
+            this.nombres.setText("");
+            this.infoadic.setText("");
+            this.guardarButton.setText("REGISTRAR");
+            //this.seleccionaFila(fila);
+            //JOptionPane.showMessageDialog(null, " " + id.getText() + " SE HA DELETE OK");
+        }
+    }//GEN-LAST:event_eliminarButtonActionPerformed
 
-    private void aSIconButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton2ActionPerformed
+    private void nuevoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_aSIconButton2ActionPerformed
+        //this.tituloLabel.setText("REGISTRAR");
+        this.guardarButton.setText("REGISTRAR");
+        this.id.setText("");
+        this.nombres.setText("");
+        this.infoadic.setText("");
 
-    private void aSIconButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton3ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_aSIconButton3ActionPerformed
+    }//GEN-LAST:event_nuevoButtonActionPerformed
+
+    private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
+
+        System.out.println("id: " + this.id.getText());
+        Cliente s = new Cliente();
+
+        s.setNombres(this.nombres.getText());
+        s.setInfoadic(this.infoadic.getText());
+        int opcion = 0;
+        if (this.id.getText().equals("")) {
+            System.out.println("INSERT ");
+            opcion = CienteData.registrar(s);
+        } else {
+            System.out.println("UPDATE ");
+            s.setId(Integer.parseInt(this.id.getText()));
+            opcion = CienteData.actualizar(s);
+        }
+
+        if (opcion != 0) {
+            //String fila = String.valueOf(CienteData.extraerID());
+            limpiarCampos();
+           // this.seleccionaFila(fila);
+            JOptionPane.showMessageDialog(null, " " + s.getNombres() + " SE HA GUARDADO OK");
+            /*SuccessAlert sa = new SuccessAlert(new JFrame(), true);
+                    sa.titulo.setText("¡HECHO!");
+                    sa.msj.setText("SE HA REGISTRADO UN");
+                    sa.msj1.setText("NUEVO PRODUCTO");
+                    sa.setVisible(true);*/
+        }
+    }//GEN-LAST:event_guardarButtonActionPerformed
 
     private void aSIconButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton4ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_aSIconButton4ActionPerformed
 
+    private void buscarFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarFieldKeyReleased
+        // TODO add your handling code here:
+        //Opciones.listar(this.buscarField.getText());
+        paintTable(this.buscarField.getText());
+    }//GEN-LAST:event_buscarFieldKeyReleased
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private igu.buttons.ASIconButton aSIconButton1;
-    private igu.buttons.ASIconButton aSIconButton2;
-    private igu.buttons.ASIconButton aSIconButton3;
     private igu.buttons.ASIconButton aSIconButton4;
     private javax.swing.JTextField buscarField;
+    private igu.buttons.ASIconButton eliminarButton;
+    private igu.buttons.ASIconButton guardarButton;
+    private javax.swing.JLabel id;
+    private javax.swing.JTextArea infoadic;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -332,8 +469,8 @@ public class ComprasPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel6;
     public static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextField nombresField;
-    private javax.swing.JTable tabla;
+    private javax.swing.JTextField nombres;
+    private igu.buttons.ASIconButton nuevoButton;
+    public static javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }

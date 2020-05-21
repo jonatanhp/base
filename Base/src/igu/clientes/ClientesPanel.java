@@ -5,6 +5,7 @@
  */
 package igu.clientes;
 
+import data.CienteData;
 import entites.Cliente;
 import igu.alertas.principal.ErrorAlert;
 import igu.princ.Validate;
@@ -17,6 +18,10 @@ import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -37,39 +42,51 @@ public class ClientesPanel extends javax.swing.JPanel {
         jScrollPane1.getVerticalScrollBar().setUI(new MyScrollbarUI());
         jScrollPane1.getHorizontalScrollBar().setUI(new MyScrollbarUI());
         // ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+        this.id.setText("");
+        paintTable("");
 
-        Opciones.listar("");
         ListSelectionModel cellSelectionModel = tabla.getSelectionModel();
-
+        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                /*
-                String selectedData = null;
-
-                int[] selectedRow = tabla.getSelectedRows();
-                int[] selectedColumns = tabla.getSelectedColumns();
-
-                for (int i = 0; i < selectedRow.length; i++) {
-                    for (int j = 0; j < selectedColumns.length; j++) {
-                        selectedData = (String) tabla.getValueAt(selectedRow[i], selectedColumns[j]);
+                if (tabla.getRowCount() > 0) {
+                    int[] row = tabla.getSelectedRows();
+                    if (row.length > 0) {
+                        String ids = (String) tabla.getValueAt(row[0], 0);
+                        id.setText("" + ids);
+                        String nombress = (String) tabla.getValueAt(row[0], 1);
+                        nombres.setText("" + nombress);
+                        String infoadics = (String) tabla.getValueAt(row[0], 2);
+                        infoadic.setText("" + infoadics);
+                        System.out.println("Table element selected es: " + ids);
+                        guardarButton.setText("MODIFICAR");
                     }
+                } else {
+                    System.out.println("eee");
                 }
-                System.out.println("Selected: " + selectedData);
-                 */
-                int[] row = tabla.getSelectedRows();
-                String ids  = (String) tabla.getValueAt(row[0], 0);
-                id.setText("" + ids);
-                String nombress  = (String) tabla.getValueAt(row[0], 1);
-                nombres.setText("" + nombress);
-                String infoadics  = (String) tabla.getValueAt(row[0], 2);
-                infoadic.setText("" + infoadics);
-                System.out.println("Table element selected es: " + ids);
             }
 
         });
 
     }
 
+    private void paintTable(String buscar) {
+        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
+        List<Cliente> lis = CienteData.list(buscar);
+        while (modelo.getRowCount() > 0) {
+            modelo.removeRow(0);
+        }
+        String datos[] = new String[lis.size()];
+        for (Cliente d : lis) {
+            //modelo.addRow(new Object[]{d.getId(), d.getNombres(), d.getInfoadic()});
+            datos[0] = d.getId() + "";
+            datos[1] = d.getNombres();
+            datos[2] = d.getInfoadic();
+            modelo.addRow(datos);
+        }
+    }
+
+    /*
     public static void seleccionaFila(String id) {
         for (int i = 0; i < tabla.getRowCount(); i++) {
             if (id.equals(tabla.getValueAt(i, 0).toString())) {
@@ -77,13 +94,14 @@ public class ClientesPanel extends javax.swing.JPanel {
                 break;
             }
         }
-    }
+    }*/
 
     private void limpiarCampos() {
         this.nombres.requestFocus();
         this.nombres.setText("");
         this.infoadic.setText("");
-        Opciones.listar("");
+        paintTable("");
+
     }
 
     /**
@@ -109,7 +127,7 @@ public class ClientesPanel extends javax.swing.JPanel {
         jPanel6 = new javax.swing.JPanel();
         nuevoButton = new igu.buttons.ASIconButton();
         guardarButton = new igu.buttons.ASIconButton();
-        modificarButton = new igu.buttons.ASIconButton();
+        eliminarButton = new igu.buttons.ASIconButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         infoadic = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
@@ -178,6 +196,7 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         jPanel4.setBackground(new java.awt.Color(58, 159, 171));
 
+        tabla.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -243,13 +262,13 @@ public class ClientesPanel extends javax.swing.JPanel {
             }
         });
 
-        modificarButton.setText("Modificar");
-        modificarButton.setColorHover(new java.awt.Color(0, 102, 102));
-        modificarButton.setColorNormal(new java.awt.Color(153, 153, 153));
-        modificarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
-        modificarButton.addActionListener(new java.awt.event.ActionListener() {
+        eliminarButton.setText("Elimininar");
+        eliminarButton.setColorHover(new java.awt.Color(0, 102, 102));
+        eliminarButton.setColorNormal(new java.awt.Color(153, 153, 153));
+        eliminarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
+        eliminarButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                modificarButtonActionPerformed(evt);
+                eliminarButtonActionPerformed(evt);
             }
         });
 
@@ -280,7 +299,7 @@ public class ClientesPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(modificarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -299,7 +318,7 @@ public class ClientesPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(modificarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -362,35 +381,32 @@ public class ClientesPanel extends javax.swing.JPanel {
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void modificarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_modificarButtonActionPerformed
+    private void eliminarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarButtonActionPerformed
         // TODO add your handling code here:
-        if (this.tabla.getRowCount() < 1) {
-            ErrorAlert er = new ErrorAlert(new JFrame(), true);
-            er.titulo.setText("OOPS...");
-            er.msj.setText("LA TABLA ESTA VACÍA");
-            er.msj1.setText("");
-            er.setVisible(true);
-        } else {
-            if (this.tabla.getSelectedRowCount() < 1) {
-                ErrorAlert er = new ErrorAlert(new JFrame(), true);
-                er.titulo.setText("OOPS...");
-                er.msj.setText("SELECCIONA UN");
-                er.msj1.setText("REGISTRO");
-                er.setVisible(true);
-            } else {
-
-                int fila = this.tabla.getSelectedRow();
-
-                this.id.setText(this.tabla.getValueAt(fila, 0).toString());
-                this.nombres.setText(this.tabla.getValueAt(fila, 1).toString());
-                this.infoadic.setText(this.tabla.getValueAt(fila, 2).toString());
-
-                //this.titulo.setText("MODIFICAR");
-                this.guardarButton.setText("GUARDAR");
+        System.out.println("id: " + this.id.getText());
+        int opcion = 0;
+        if (!this.id.getText().equals("")) {
+            System.out.println("DELETE ");
+            int n = JOptionPane.showConfirmDialog(
+                    null,
+                    "ESTAS SEGURO ELIMINAR?!",
+                    "",
+                    JOptionPane.YES_NO_OPTION);
+            if (n == JOptionPane.YES_OPTION) {
+                opcion = CienteData.eliminar(Integer.parseInt(this.id.getText()));
             }
         }
-
-    }//GEN-LAST:event_modificarButtonActionPerformed
+        if (opcion != 0) {
+            // String fila = String.valueOf(CienteData.extraerID());
+            limpiarCampos();
+            this.id.setText("");
+            this.nombres.setText("");
+            this.infoadic.setText("");
+            this.guardarButton.setText("REGISTRAR");
+            //this.seleccionaFila(fila);
+            //JOptionPane.showMessageDialog(null, " " + id.getText() + " SE HA DELETE OK");
+        }
+    }//GEN-LAST:event_eliminarButtonActionPerformed
 
     private void nuevoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoButtonActionPerformed
         // TODO add your handling code here:
@@ -403,17 +419,27 @@ public class ClientesPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_nuevoButtonActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
+
+        System.out.println("id: " + this.id.getText());
         Cliente s = new Cliente();
 
         s.setNombres(this.nombres.getText());
         s.setInfoadic(this.infoadic.getText());
+        int opcion = 0;
+        if (this.id.getText().equals("")) {
+            System.out.println("INSERT ");
+            opcion = CienteData.registrar(s);
+        } else {
+            System.out.println("UPDATE ");
+            s.setId(Integer.parseInt(this.id.getText()));
+            opcion = CienteData.actualizar(s);
+        }
 
-        int opcion = Opciones.registrar(s);
         if (opcion != 0) {
-            String fila = String.valueOf(Opciones.extraerID());
+            //String fila = String.valueOf(CienteData.extraerID());
             limpiarCampos();
-            this.seleccionaFila(fila);
-            JOptionPane.showMessageDialog(null, " " + s.getNombres() + " SE HA REGISTRADO");
+            // this.seleccionaFila(fila);
+            JOptionPane.showMessageDialog(null, " " + s.getNombres() + " SE HA GUARDADO OK");
             /*SuccessAlert sa = new SuccessAlert(new JFrame(), true);
                     sa.titulo.setText("¡HECHO!");
                     sa.msj.setText("SE HA REGISTRADO UN");
@@ -428,13 +454,15 @@ public class ClientesPanel extends javax.swing.JPanel {
 
     private void buscarFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarFieldKeyReleased
         // TODO add your handling code here:
-        Opciones.listar(this.buscarField.getText());
+        //Opciones.listar(this.buscarField.getText());
+        paintTable(this.buscarField.getText());
     }//GEN-LAST:event_buscarFieldKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private igu.buttons.ASIconButton aSIconButton4;
     private javax.swing.JTextField buscarField;
+    private igu.buttons.ASIconButton eliminarButton;
     private igu.buttons.ASIconButton guardarButton;
     private javax.swing.JLabel id;
     private javax.swing.JTextArea infoadic;
@@ -450,7 +478,6 @@ public class ClientesPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel6;
     public static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private igu.buttons.ASIconButton modificarButton;
     private javax.swing.JTextField nombres;
     private igu.buttons.ASIconButton nuevoButton;
     public static javax.swing.JTable tabla;
