@@ -12,25 +12,28 @@ import igu.alertas.principal.ErrorAlert;
  * @author Asullom
  */
 public class Validate {
+
+    public static boolean isPin = false;
     
-    public static boolean isPin=false;
-    
+
     public boolean comprobar() {
-        
+
+       
+
         if (isPin) {
-/*
+            /*
                 ErrorAlert er = new ErrorAlert(null, true);
                 er.titulo.setText("OOPS...");
                 er.msj.setText("LA APLICACIÓN YA ESTA EN EJECUCIÓN!");
                 er.msj1.setText("");
                 er.setVisible(true);
-                */
-                return true;
- 
+             */
+            return true;
+
         } else {
 
             return false;
         }
     }
-    
+
 }

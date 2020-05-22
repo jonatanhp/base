@@ -5,9 +5,9 @@
  */
 package igu.alertas.principal;
 
-import java.awt.event.KeyEvent;
 import java.util.Timer;
 import java.util.TimerTask;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 
 /**
@@ -25,6 +25,7 @@ public class ErrorAlert extends javax.swing.JDialog {
     public ErrorAlert(JFrame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        this.setIconImage(new ImageIcon(getClass().getResource("/igu/imgs/img/market.png")).getImage());
         AWTUtilities.setOpaque(this, false);
         Ubicar(0);
     }
@@ -43,7 +44,7 @@ public class ErrorAlert extends javax.swing.JDialog {
         titulo = new javax.swing.JLabel();
         msj = new javax.swing.JLabel();
         msj1 = new javax.swing.JLabel();
-        materialButton1 = new principal.MaterialButton();
+        aSIconButton1 = new igu.buttons.ASIconButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -70,15 +71,11 @@ public class ErrorAlert extends javax.swing.JDialog {
         msj1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         msj1.setText("msj1");
 
-        materialButton1.setText("ACEPTAR");
-        materialButton1.addActionListener(new java.awt.event.ActionListener() {
+        aSIconButton1.setBackground(new java.awt.Color(0, 204, 204));
+        aSIconButton1.setText("ACEPTAR");
+        aSIconButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                materialButton1ActionPerformed(evt);
-            }
-        });
-        materialButton1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                materialButton1KeyTyped(evt);
+                aSIconButton1ActionPerformed(evt);
             }
         });
 
@@ -87,38 +84,28 @@ public class ErrorAlert extends javax.swing.JDialog {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(jPanel1Layout.createSequentialGroup()
-                            .addGap(39, 39, 39)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 314, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(57, 57, 57)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(10, 10, 10)
-                                .addComponent(msj1, javax.swing.GroupLayout.PREFERRED_SIZE, 244, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(msj, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(106, 106, 106)
-                        .addComponent(materialButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(47, Short.MAX_VALUE))
+                .addGap(117, 117, 117)
+                .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(155, Short.MAX_VALUE))
+            .addComponent(msj1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(msj, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(titulo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(19, 19, 19)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(titulo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(msj, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(msj1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(materialButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 41, Short.MAX_VALUE)
-                .addGap(16, 16, 16))
+                .addComponent(msj1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(43, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -136,24 +123,6 @@ public class ErrorAlert extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
      
-    private void materialButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_materialButton1ActionPerformed
-        // TODO add your handling code here:
-        task = new TimerTask() {
-            @Override
-            public void run() {
-                if (i == 0) {
-                    Cerrar();
-                } else {
-                    Ubicar(i);
-                    i -= 32;
-                    Trasparencia((float) i / 352);
-                }
-            }
-        };
-        timer = new Timer();
-        timer.schedule(task, 0, 2);
-    }//GEN-LAST:event_materialButton1ActionPerformed
-
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         // TODO add your handling code here:
         task = new TimerTask() {
@@ -178,25 +147,23 @@ public class ErrorAlert extends javax.swing.JDialog {
         dispose();
     }//GEN-LAST:event_formWindowClosed
 
-    private void materialButton1KeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_materialButton1KeyTyped
-        // TODO add your handling code here:
-         if ((evt.getKeyChar() == KeyEvent.VK_ENTER)) {
-            task = new TimerTask() {
-                @Override
-                public void run() {
-                    if (i == 0) {
-                        Cerrar();
-                    } else {
-                        Ubicar(i);
-                        i -= 32;
-                        Trasparencia((float) i / 352);
-                    }
+    private void aSIconButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton1ActionPerformed
+                // TODO add your handling code here:
+        task = new TimerTask() {
+            @Override
+            public void run() {
+                if (i == 0) {
+                    Cerrar();
+                } else {
+                    Ubicar(i);
+                    i -= 32;
+                    Trasparencia((float) i / 352);
                 }
-            };
-            timer = new Timer();
-            timer.schedule(task, 0, 2);
-        }
-    }//GEN-LAST:event_materialButton1KeyTyped
+            }
+        };
+        timer = new Timer();
+        timer.schedule(task, 0, 2);
+    }//GEN-LAST:event_aSIconButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -241,9 +208,9 @@ public class ErrorAlert extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private igu.buttons.ASIconButton aSIconButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;
-    private principal.MaterialButton materialButton1;
     public static javax.swing.JLabel msj;
     public static javax.swing.JLabel msj1;
     public static javax.swing.JLabel titulo;

@@ -18,7 +18,7 @@ import javax.swing.plaf.basic.BasicScrollBarUI;
 
 /**
  *
- * @author Rojeru San
+ * @author 
  */
 public class MyScrollbarUI extends BasicScrollBarUI {
 

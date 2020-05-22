@@ -28,14 +28,15 @@ public class PinPanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        materialButton1 = new principal.MaterialButton();
+        aSIconButton1 = new igu.buttons.ASIconButton();
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
-        materialButton1.setText("ACTIVAR");
-        materialButton1.addActionListener(new java.awt.event.ActionListener() {
+        aSIconButton1.setText("PIN");
+        aSIconButton1.setColorHover(new java.awt.Color(0, 102, 102));
+        aSIconButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                materialButton1ActionPerformed(evt);
+                aSIconButton1ActionPerformed(evt);
             }
         });
 
@@ -44,16 +45,16 @@ public class PinPanel extends javax.swing.JPanel {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(94, 94, 94)
-                .addComponent(materialButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 124, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addGap(82, 82, 82)
+                .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(130, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(136, 136, 136)
-                .addComponent(materialButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(99, Short.MAX_VALUE))
+                .addGap(61, 61, 61)
+                .addComponent(aSIconButton1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(204, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -75,9 +76,13 @@ public class PinPanel extends javax.swing.JPanel {
         Validate.isPin = true;
     }//GEN-LAST:event_materialButton1ActionPerformed
 
+    private void aSIconButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton1ActionPerformed
+        Validate.isPin = true;
+    }//GEN-LAST:event_aSIconButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private igu.buttons.ASIconButton aSIconButton1;
     private javax.swing.JPanel jPanel1;
-    private principal.MaterialButton materialButton1;
     // End of variables declaration//GEN-END:variables
 }

@@ -17,7 +17,7 @@ import javax.swing.table.TableCellRenderer;
 
 /**
  *
- * @author Rojeru San CL
+ * @author 
  */
 public class EstiloTablaHeader implements TableCellRenderer{
 

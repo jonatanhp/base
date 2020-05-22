@@ -6,14 +6,19 @@
 package igu.clientes;
 
 import data.CienteData;
+import igu.tablas.ExportarExcel;
 import entites.Cliente;
+import igu.alertas.principal.AWTUtilities;
+import igu.alertas.principal.ConfirmDialog;
 import igu.alertas.principal.ErrorAlert;
+import igu.alertas.principal.SuccessAlert;
 import igu.princ.Validate;
 import javax.swing.ListSelectionModel;
 
 import igu.tablas.EstiloTablaHeader;
 import igu.tablas.EstiloTablaRenderer;
 import igu.tablas.MyScrollbarUI;
+import java.io.IOException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -22,6 +27,12 @@ import javax.swing.table.DefaultTableModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import java.io.IOException;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  *
@@ -29,34 +40,39 @@ import java.util.List;
  */
 public class ClientesPanel extends javax.swing.JPanel {
 
+    ExportarExcel obj;
+    Timer timer = null;
+    TimerTask task;
+    int i = 32;
+
     /**
      * Creates new form BancosPanel
      */
     public ClientesPanel() {
         initComponents();
+        //AWTUtilities.setOpaque(this, false);
 
         this.tabla.getTableHeader().setDefaultRenderer(new EstiloTablaHeader());
         this.tabla.setDefaultRenderer(Object.class, new EstiloTablaRenderer());
-        this.tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         jScrollPane1.getViewport().setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.getVerticalScrollBar().setUI(new MyScrollbarUI());
         jScrollPane1.getHorizontalScrollBar().setUI(new MyScrollbarUI());
-        // ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
+
         this.id.setText("");
         paintTable("");
 
-        ListSelectionModel cellSelectionModel = tabla.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
+        tabla.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        tabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
                 if (tabla.getRowCount() > 0) {
                     int[] row = tabla.getSelectedRows();
                     if (row.length > 0) {
-                        String ids = (String) tabla.getValueAt(row[0], 0);
+                        String ids = (String) tabla.getValueAt(row[0], 1);
                         id.setText("" + ids);
-                        String nombress = (String) tabla.getValueAt(row[0], 1);
+                        String nombress = (String) tabla.getValueAt(row[0], 2);
                         nombres.setText("" + nombress);
-                        String infoadics = (String) tabla.getValueAt(row[0], 2);
+                        String infoadics = (String) tabla.getValueAt(row[0], 3);
                         infoadic.setText("" + infoadics);
                         System.out.println("Table element selected es: " + ids);
                         guardarButton.setText("MODIFICAR");
@@ -68,6 +84,8 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         });
 
+        this.nombres.requestFocus();
+
     }
 
     private void paintTable(String buscar) {
@@ -76,25 +94,21 @@ public class ClientesPanel extends javax.swing.JPanel {
         while (modelo.getRowCount() > 0) {
             modelo.removeRow(0);
         }
-        String datos[] = new String[lis.size()];
+        String datos[] = new String[4];
+        int cont = 0;
         for (Cliente d : lis) {
             //modelo.addRow(new Object[]{d.getId(), d.getNombres(), d.getInfoadic()});
-            datos[0] = d.getId() + "";
-            datos[1] = d.getNombres();
-            datos[2] = d.getInfoadic();
+            datos[0] = ++cont + "";
+            datos[1] = d.getId() + "";
+            datos[2] = d.getNombres();
+            datos[3] = d.getInfoadic();
             modelo.addRow(datos);
         }
+        tabla.getColumnModel().getColumn(0).setPreferredWidth(100);
+        tabla.getColumnModel().getColumn(1).setPreferredWidth(100);
+        tabla.getColumnModel().getColumn(2).setPreferredWidth(500);
+        tabla.getColumnModel().getColumn(3).setPreferredWidth(500);
     }
-
-    /*
-    public static void seleccionaFila(String id) {
-        for (int i = 0; i < tabla.getRowCount(); i++) {
-            if (id.equals(tabla.getValueAt(i, 0).toString())) {
-                tabla.setRowSelectionInterval(i, i);
-                break;
-            }
-        }
-    }*/
 
     private void limpiarCampos() {
         this.nombres.requestFocus();
@@ -169,7 +183,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 403, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 554, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buscarField, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -196,7 +210,7 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         jPanel4.setBackground(new java.awt.Color(58, 159, 171));
 
-        tabla.setFont(new java.awt.Font("Tahoma", 0, 18)); // NOI18N
+        tabla.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         tabla.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
@@ -205,10 +219,19 @@ public class ClientesPanel extends javax.swing.JPanel {
                 {null, null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Nº", "ID", "NOMBRES", "INFORMACIÓN ADIC"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tabla.setDoubleBuffered(true);
+        tabla.setRowHeight(25);
         jScrollPane1.setViewportView(tabla);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
@@ -216,7 +239,7 @@ public class ClientesPanel extends javax.swing.JPanel {
         jPanel4Layout.setHorizontalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
                 .addContainerGap())
         );
         jPanel4Layout.setVerticalGroup(
@@ -242,7 +265,7 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         jPanel6.setBackground(new java.awt.Color(255, 255, 255));
 
-        nuevoButton.setText("Nuevo");
+        nuevoButton.setText("NUEVO");
         nuevoButton.setColorHover(new java.awt.Color(0, 102, 102));
         nuevoButton.setColorNormal(new java.awt.Color(153, 153, 153));
         nuevoButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -252,7 +275,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             }
         });
 
-        guardarButton.setText("Guardar");
+        guardarButton.setText("GUARDAR");
         guardarButton.setColorHover(new java.awt.Color(0, 102, 102));
         guardarButton.setColorNormal(new java.awt.Color(153, 153, 153));
         guardarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -262,7 +285,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             }
         });
 
-        eliminarButton.setText("Elimininar");
+        eliminarButton.setText("ELIMINAR");
         eliminarButton.setColorHover(new java.awt.Color(0, 102, 102));
         eliminarButton.setColorNormal(new java.awt.Color(153, 153, 153));
         eliminarButton.setFont(new java.awt.Font("Tahoma", 1, 16)); // NOI18N
@@ -277,13 +300,13 @@ public class ClientesPanel extends javax.swing.JPanel {
         infoadic.setRows(5);
         jScrollPane2.setViewportView(infoadic);
 
-        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Información adicional:");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel2.setText("Nombres del cliente: ");
 
-        nombres.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        nombres.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         id.setText("id");
 
@@ -299,7 +322,9 @@ public class ClientesPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(27, 27, 27)
+                        .addComponent(id))
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -308,28 +333,27 @@ public class ClientesPanel extends javax.swing.JPanel {
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(nombres)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(id)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(id)
+                    .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(eliminarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
                     .addComponent(nombres, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(id))
+                    .addComponent(jLabel2))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(36, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(180, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
@@ -343,7 +367,7 @@ public class ClientesPanel extends javax.swing.JPanel {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addContainerGap())
@@ -382,30 +406,40 @@ public class ClientesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void eliminarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarButtonActionPerformed
-        // TODO add your handling code here:
-        System.out.println("id: " + this.id.getText());
-        int opcion = 0;
-        if (!this.id.getText().equals("")) {
-            System.out.println("DELETE ");
-            int n = JOptionPane.showConfirmDialog(
-                    null,
-                    "ESTAS SEGURO ELIMINAR?!",
-                    "",
-                    JOptionPane.YES_NO_OPTION);
-            if (n == JOptionPane.YES_OPTION) {
-                opcion = CienteData.eliminar(Integer.parseInt(this.id.getText()));
+        if (this.tabla.getRowCount() < 1) {
+            ErrorAlert er = new ErrorAlert(new JFrame(), true);
+            er.titulo.setText("OOPS...");
+            er.msj.setText("LA TABLA ESTA VACÍA");
+            er.msj1.setText("");
+            er.setVisible(true);
+        } else {
+            System.out.println("id: " + this.id.getText());
+            if (this.id.getText().equals("")) {
+                ErrorAlert er = new ErrorAlert(new JFrame(), true);
+                er.titulo.setText("OOPS...");
+                er.msj.setText("SELECCIONA UN");
+                er.msj1.setText("REGISTRO");
+                er.setVisible(true);
+            } else {
+                System.out.println("DELETE ");
+                ConfirmDialog cd = new ConfirmDialog(new JFrame(), true);
+                cd.titulo.setText("DELETE...");
+                cd.msj.setText("ESTAS SEGURO ELIMINAR?!");
+                cd.msj1.setText("");
+                cd.setVisible(true);
+                if (cd.YES_OPTION) {
+                    int opcion = CienteData.eliminar(Integer.parseInt(this.id.getText()));
+                    if (opcion != 0) {
+                        limpiarCampos();
+                        this.id.setText("");
+                        this.nombres.setText("");
+                        this.infoadic.setText("");
+                        this.guardarButton.setText("REGISTRAR");
+                    }
+                }
             }
         }
-        if (opcion != 0) {
-            // String fila = String.valueOf(CienteData.extraerID());
-            limpiarCampos();
-            this.id.setText("");
-            this.nombres.setText("");
-            this.infoadic.setText("");
-            this.guardarButton.setText("REGISTRAR");
-            //this.seleccionaFila(fila);
-            //JOptionPane.showMessageDialog(null, " " + id.getText() + " SE HA DELETE OK");
-        }
+
     }//GEN-LAST:event_eliminarButtonActionPerformed
 
     private void nuevoButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_nuevoButtonActionPerformed
@@ -415,41 +449,59 @@ public class ClientesPanel extends javax.swing.JPanel {
         this.id.setText("");
         this.nombres.setText("");
         this.infoadic.setText("");
+        this.nombres.requestFocus();
 
     }//GEN-LAST:event_nuevoButtonActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
 
-        System.out.println("id: " + this.id.getText());
-        Cliente s = new Cliente();
+        if (this.nombres.getText().equals("")) {
+            ErrorAlert er = new ErrorAlert(new JFrame(), true);
+            er.titulo.setText("OOPS...");
+            er.msj.setText("FALTAN CAMPOS DE LLENAR");
+            er.msj1.setText("");
+            er.setVisible(true);
 
-        s.setNombres(this.nombres.getText());
-        s.setInfoadic(this.infoadic.getText());
-        int opcion = 0;
-        if (this.id.getText().equals("")) {
-            System.out.println("INSERT ");
-            opcion = CienteData.registrar(s);
         } else {
-            System.out.println("UPDATE ");
-            s.setId(Integer.parseInt(this.id.getText()));
-            opcion = CienteData.actualizar(s);
-        }
 
-        if (opcion != 0) {
-            //String fila = String.valueOf(CienteData.extraerID());
-            limpiarCampos();
-            // this.seleccionaFila(fila);
-            JOptionPane.showMessageDialog(null, " " + s.getNombres() + " SE HA GUARDADO OK");
-            /*SuccessAlert sa = new SuccessAlert(new JFrame(), true);
+            System.out.println("id: " + this.id.getText());
+            Cliente s = new Cliente();
+
+            s.setNombres(this.nombres.getText());
+            s.setInfoadic(this.infoadic.getText());
+            if (this.id.getText().equals("")) {
+                int opcion = CienteData.registrar(s);
+                if (opcion != 0) {
+                    limpiarCampos();
+                    SuccessAlert sa = new SuccessAlert(new JFrame(), true);
                     sa.titulo.setText("¡HECHO!");
                     sa.msj.setText("SE HA REGISTRADO UN");
                     sa.msj1.setText("NUEVO PRODUCTO");
-                    sa.setVisible(true);*/
+                    sa.setVisible(true);
+                }
+            } else {
+                s.setId(Integer.parseInt(this.id.getText()));
+                int opcion = CienteData.actualizar(s);
+                if (opcion != 0) {
+                    limpiarCampos();
+                    SuccessAlert sa = new SuccessAlert(new JFrame(), true);
+                    sa.titulo.setText("¡HECHO!");
+                    sa.msj.setText("SE HAN GUARDADO LOS CAMBIOS");
+                    sa.msj1.setText("EN PRODUCTO");
+                    sa.setVisible(true);
+                }
+            }
+
         }
     }//GEN-LAST:event_guardarButtonActionPerformed
 
     private void aSIconButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton4ActionPerformed
-        // TODO add your handling code here:
+        try {
+            obj = new ExportarExcel();
+            obj.exportarExcel(tabla);
+        } catch (IOException ex) {
+            Logger.getLogger(ClientesPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_aSIconButton4ActionPerformed
 
     private void buscarFieldKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarFieldKeyReleased

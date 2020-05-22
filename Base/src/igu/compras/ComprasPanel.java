@@ -35,55 +35,11 @@ public class ComprasPanel extends javax.swing.JPanel {
     public ComprasPanel() {
         initComponents();
 
-        this.tabla.getTableHeader().setDefaultRenderer(new EstiloTablaHeader());
-        this.tabla.setDefaultRenderer(Object.class, new EstiloTablaRenderer());
-        this.tabla.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        jScrollPane1.getViewport().setBackground(new java.awt.Color(255, 255, 255));
-        jScrollPane1.getVerticalScrollBar().setUI(new MyScrollbarUI());
-        jScrollPane1.getHorizontalScrollBar().setUI(new MyScrollbarUI());
-        // ((javax.swing.plaf.basic.BasicInternalFrameUI) this.getUI()).setNorthPane(null);
-        this.id.setText("");
-        paintTable("");
-
-        ListSelectionModel cellSelectionModel = tabla.getSelectionModel();
-        cellSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        cellSelectionModel.addListSelectionListener(new ListSelectionListener() {
-            public void valueChanged(ListSelectionEvent e) {
-                if (tabla.getRowCount() > 0) {
-                    int[] row = tabla.getSelectedRows();
-                    if (row.length > 0) {
-                        String ids = (String) tabla.getValueAt(row[0], 0);
-                        id.setText("" + ids);
-                        String nombress = (String) tabla.getValueAt(row[0], 1);
-                        nombres.setText("" + nombress);
-                        String infoadics = (String) tabla.getValueAt(row[0], 2);
-                        infoadic.setText("" + infoadics);
-                        System.out.println("Table element selected es: " + ids);
-                        guardarButton.setText("MODIFICAR");
-                    }
-                } else {
-                    System.out.println("eee");
-                }
-            }
-
-        });
 
     }
 
     private void paintTable(String buscar) {
-        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        List<Cliente> lis = CienteData.list(buscar);
-        while (modelo.getRowCount() > 0) {
-            modelo.removeRow(0);
-        }
-        String datos[] = new String[lis.size()];
-        for (Cliente d : lis) {
-            //modelo.addRow(new Object[]{d.getId(), d.getNombres(), d.getInfoadic()});
-            datos[0] = d.getId() + "";
-            datos[1] = d.getNombres();
-            datos[2] = d.getInfoadic();
-            modelo.addRow(datos);
-        }
+
     }
 /*
     public static void seleccionaFila(String id) {
@@ -119,9 +75,6 @@ public class ComprasPanel extends javax.swing.JPanel {
         aSIconButton4 = new igu.buttons.ASIconButton();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        tabla = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         nuevoButton = new igu.buttons.ASIconButton();
@@ -193,47 +146,15 @@ public class ComprasPanel extends javax.swing.JPanel {
 
         jPanel2.setBackground(new java.awt.Color(102, 255, 102));
 
-        jPanel4.setBackground(new java.awt.Color(58, 159, 171));
-
-        tabla.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tabla.setDoubleBuffered(true);
-        jScrollPane1.setViewportView(tabla);
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 411, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 421, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGap(0, 267, Short.MAX_VALUE)
         );
 
         jPanel3.setBackground(new java.awt.Color(58, 159, 171));
@@ -464,13 +385,10 @@ public class ComprasPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
-    public static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTextField nombres;
     private igu.buttons.ASIconButton nuevoButton;
-    public static javax.swing.JTable tabla;
     // End of variables declaration//GEN-END:variables
 }

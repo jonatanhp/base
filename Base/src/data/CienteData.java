@@ -14,7 +14,7 @@ import java.util.List;
 
 /**
  *
- * @author asullom
+ * @author Asullom
  */
 public class CienteData {
 
@@ -34,7 +34,7 @@ public class CienteData {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        System.out.println(sql);
+        //System.out.println(sql);
         return rsu;
     }
 
@@ -54,7 +54,7 @@ public class CienteData {
             rsu = ps.executeUpdate();
         } catch (SQLException ex) {
         }
-        System.out.println(sql);
+        //System.out.println(sql);
         return rsu;
     }
 
@@ -69,7 +69,7 @@ public class CienteData {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        System.out.println(sql);
+        //System.out.println(sql);
         return rsu;
     }
 
@@ -125,53 +125,3 @@ public class CienteData {
         }
     }
 }
-
-/*
-
-
-    public static int extraerID() {
-        int c = 0;
-        String SQL = "SELECT MAX(id) FROM cliente";
-
-        try {
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery(SQL);
-            while (rs.next()) {
-                c = rs.getInt(1);
-            }
-
-        } catch (SQLException ex) {
-            Logger.getLogger(CienteData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return c;
-    }
-
-    public static void listar(String busca) {
-        DefaultTableModel modelo = (DefaultTableModel) igu.clientes.ClientesPanel.tabla.getModel();
-
-        while (modelo.getRowCount() > 0) {
-            modelo.removeRow(0);
-        }
-        String sql = "";
-        if (busca.equals("")) {
-            sql = "SELECT * FROM cliente ORDER BY id";
-        } else {
-            sql = "SELECT * FROM cliente WHERE (id LIKE'" + busca + "%' OR "
-                    + "nombres LIKE'" + busca + "%' OR infoadic LIKE'" + busca + "%' OR "
-                    + "id LIKE'" + busca + "%') "
-                    + "ORDER BY nombres";
-        }
-        String datos[] = new String[3];
-        try {
-            Statement st = cn.createStatement();
-            ResultSet rs = st.executeQuery(sql);
-            while (rs.next()) {
-                datos[0] = rs.getString("id");
-                datos[1] = rs.getString("nombres");
-                datos[2] = rs.getString("infoadic");
-                modelo.addRow(datos);
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(CienteData.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }*/
