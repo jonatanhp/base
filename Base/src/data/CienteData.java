@@ -34,7 +34,6 @@ public class CienteData {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        //System.out.println(sql);
         return rsu;
     }
 
@@ -54,7 +53,6 @@ public class CienteData {
             rsu = ps.executeUpdate();
         } catch (SQLException ex) {
         }
-        //System.out.println(sql);
         return rsu;
     }
 
@@ -69,7 +67,6 @@ public class CienteData {
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        //System.out.println(sql);
         return rsu;
     }
 

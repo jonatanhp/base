@@ -30,15 +30,15 @@ public class App {
             System.exit(0);
         }
          
-        String s = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
-        try {
+        //String s = "com.sun.java.swing.plaf.nimbus.NimbusLookAndFeel";
+        //try {
             MainFrame m = new MainFrame();
-            javax.swing.UIManager.setLookAndFeel(s);
+            //javax.swing.UIManager.setLookAndFeel(s);
             m.setLocationRelativeTo(null);
             m.setVisible(true);
 
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
-            Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        //} catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException ex) {
+        //    Logger.getLogger(App.class.getName()).log(Level.SEVERE, null, ex);
+        //}
     }
 }

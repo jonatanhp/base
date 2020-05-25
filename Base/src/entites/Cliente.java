@@ -33,4 +33,5 @@ public class Cliente {
     public void setInfoadic(String infoadic) {
         this.infoadic = infoadic;
     }
+    //
 }
