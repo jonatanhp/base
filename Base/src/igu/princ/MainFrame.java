@@ -9,6 +9,7 @@ import data.Conn;
 import igu.clientes.ClientesPanel;
 import igu.ventas.VentasPanel;
 import igu.compras.ComprasPanel;
+import igu.provee.ProveedoresPanel;
 import java.awt.Color;
 import java.awt.Font;
 import java.util.logging.Level;
@@ -28,7 +29,7 @@ public class MainFrame extends javax.swing.JFrame {
     public MainFrame() {
         
         initComponents();
-        Conn.connectSQLite();
+        //Conn.connectSQLite();
         this.setIconImage(new ImageIcon(getClass().getResource("/igu/imgs/img/market.png")).getImage());
 
         this.setExtendedState(MAXIMIZED_BOTH);
@@ -58,6 +59,7 @@ public class MainFrame extends javax.swing.JFrame {
         ventasButton = new igu.buttons.ASIconButton();
         clientesButton = new igu.buttons.ASIconButton();
         ventaButton2 = new igu.buttons.ASIconButton();
+        proveeButton = new igu.buttons.ASIconButton();
         pnlCentro = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         pnlPrincipal = new javax.swing.JPanel();
@@ -182,6 +184,31 @@ public class MainFrame extends javax.swing.JFrame {
             }
         });
 
+        proveeButton.setBackground(new java.awt.Color(239, 238, 244));
+        proveeButton.setForeground(new java.awt.Color(128, 128, 131));
+        proveeButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/igu/imgs/img/collection.png"))); // NOI18N
+        proveeButton.setText("PROVEEDORES");
+        proveeButton.setActionCommand("PROVEEDORES");
+        proveeButton.setColorHover(new java.awt.Color(204, 204, 204));
+        proveeButton.setColorNormal(new java.awt.Color(239, 238, 244));
+        proveeButton.setColorPressed(new java.awt.Color(204, 204, 204));
+        proveeButton.setColorTextHover(new java.awt.Color(128, 128, 131));
+        proveeButton.setColorTextNormal(new java.awt.Color(128, 128, 131));
+        proveeButton.setColorTextPressed(new java.awt.Color(128, 128, 131));
+        proveeButton.setFocusable(false);
+        proveeButton.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        proveeButton.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        proveeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                proveeButtonMousePressed(evt);
+            }
+        });
+        proveeButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                proveeButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -189,21 +216,24 @@ public class MainFrame extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(comprasButton, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(proveeButton, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(141, 141, 141)
                 .addComponent(ventasButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
                 .addComponent(clientesButton, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(107, 107, 107)
                 .addComponent(ventaButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(640, Short.MAX_VALUE))
+                .addGap(249, 249, 249))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(ventaButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(ventasButton, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
-                    .addComponent(clientesButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(comprasButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addComponent(proveeButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(ventaButton2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ventasButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 81, Short.MAX_VALUE)
+                    .addComponent(clientesButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(comprasButton, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -249,11 +279,11 @@ public class MainFrame extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 1089, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 629, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -281,6 +311,10 @@ public class MainFrame extends javax.swing.JFrame {
             this.clientesButton.setColorNormal(new Color(239, 238, 244));
             this.clientesButton.setColorHover(new Color(204, 204, 204));
             this.clientesButton.setColorPressed(new Color(204, 204, 204));
+            
+            this.proveeButton.setColorNormal(new Color(239, 238, 244));
+            this.proveeButton.setColorHover(new Color(204, 204, 204));
+            this.proveeButton.setColorPressed(new Color(204, 204, 204));
 
         } else {
             this.ventasButton.setColorNormal(new Color(239, 238, 244));
@@ -309,6 +343,10 @@ public class MainFrame extends javax.swing.JFrame {
             this.clientesButton.setColorNormal(new Color(239, 238, 244));
             this.clientesButton.setColorHover(new Color(204, 204, 204));
             this.clientesButton.setColorPressed(new Color(204, 204, 204));
+            
+            this.proveeButton.setColorNormal(new Color(239, 238, 244));
+            this.proveeButton.setColorHover(new Color(204, 204, 204));
+            this.proveeButton.setColorPressed(new Color(204, 204, 204));
 
         } else {
             this.comprasButton.setColorNormal(new Color(239, 238, 244));
@@ -362,6 +400,10 @@ public class MainFrame extends javax.swing.JFrame {
             this.ventasButton.setColorNormal(new Color(239, 238, 244));
             this.ventasButton.setColorHover(new Color(204, 204, 204));
             this.ventasButton.setColorPressed(new Color(204, 204, 204));
+            
+            this.proveeButton.setColorNormal(new Color(239, 238, 244));
+            this.proveeButton.setColorHover(new Color(204, 204, 204));
+            this.proveeButton.setColorPressed(new Color(204, 204, 204));
 
         } else {
             this.clientesButton.setColorNormal(new Color(239, 238, 244));
@@ -377,6 +419,40 @@ public class MainFrame extends javax.swing.JFrame {
     private void ventaButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ventaButton2ActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_ventaButton2ActionPerformed
+
+    private void proveeButtonMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_proveeButtonMousePressed
+       this.proveeButton.setSelected(true);
+       this.clientesButton.setSelected(false);
+        this.ventasButton.setSelected(false);
+        this.comprasButton.setSelected(false);
+    }//GEN-LAST:event_proveeButtonMousePressed
+
+    private void proveeButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_proveeButtonActionPerformed
+        new CambiaPanel(pnlPrincipal, new ProveedoresPanel());
+        if (this.proveeButton.isSelected()) {
+            this.proveeButton.setColorNormal(new Color(204, 204, 204));
+            this.proveeButton.setColorHover(new Color(204, 204, 204));
+            this.proveeButton.setColorPressed(new Color(204, 204, 204));
+            
+            
+            this.ventasButton.setColorNormal(new Color(239, 238, 244));
+            this.ventasButton.setColorHover(new Color(204, 204, 204));
+            this.ventasButton.setColorPressed(new Color(204, 204, 204));
+
+            this.comprasButton.setColorNormal(new Color(239, 238, 244));
+            this.comprasButton.setColorHover(new Color(204, 204, 204));
+            this.comprasButton.setColorPressed(new Color(204, 204, 204));
+            
+            this.clientesButton.setColorNormal(new Color(239, 238, 244));
+            this.clientesButton.setColorHover(new Color(204, 204, 204));
+            this.clientesButton.setColorPressed(new Color(204, 204, 204));
+
+        } else {
+            this.proveeButton.setColorNormal(new Color(239, 238, 244));
+            this.proveeButton.setColorHover(new Color(204, 204, 204));
+            this.proveeButton.setColorPressed(new Color(204, 204, 204));
+        }
+    }//GEN-LAST:event_proveeButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -398,6 +474,7 @@ public class MainFrame extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPanel pnlCentro;
     private javax.swing.JPanel pnlPrincipal;
+    private igu.buttons.ASIconButton proveeButton;
     private igu.buttons.ASIconButton ventaButton2;
     private igu.buttons.ASIconButton ventasButton;
     // End of variables declaration//GEN-END:variables

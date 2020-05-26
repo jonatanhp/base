@@ -8,31 +8,24 @@ package igu.clientes;
 import data.CienteData;
 import igu.tablas.ExportarExcel;
 import entites.Cliente;
-import igu.alertas.principal.AWTUtilities;
 import igu.alertas.principal.ConfirmDialog;
 import igu.alertas.principal.ErrorAlert;
 import igu.alertas.principal.SuccessAlert;
-import igu.princ.Validate;
 import javax.swing.ListSelectionModel;
 
 import igu.tablas.EstiloTablaHeader;
 import igu.tablas.EstiloTablaRenderer;
 import igu.tablas.MyScrollbarUI;
-import java.io.IOException;
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  *
@@ -41,13 +34,8 @@ import java.util.TimerTask;
 public class ClientesPanel extends javax.swing.JPanel {
 
     ExportarExcel obj;
-    Timer timer = null;
-    TimerTask task;
-    int i = 32;
 
-    /**
-     * Creates new form BancosPanel
-     */
+
     public ClientesPanel() {
         initComponents();
         //AWTUtilities.setOpaque(this, false);

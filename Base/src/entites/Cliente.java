@@ -2,7 +2,7 @@ package entites;
 
 /**
  *
- * @author asullom
+ * @author Asullom
  */
 public class Cliente {
 
@@ -33,5 +33,4 @@ public class Cliente {
     public void setInfoadic(String infoadic) {
         this.infoadic = infoadic;
     }
-    //
 }
