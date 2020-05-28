@@ -17,6 +17,7 @@ import igu.tablas.EstiloTablaHeader;
 import igu.tablas.EstiloTablaRenderer;
 import igu.tablas.MyScrollbarUI;
 import igu.util.Config;
+
 import javax.swing.JFrame;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -146,6 +147,7 @@ public class ProveedoresPanel extends javax.swing.JPanel {
         id = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         fecha_nac = new javax.swing.JTextField();
+        fechaProveedores = new com.toedter.calendar.JDateChooser();
 
         jPanel5.setBackground(new java.awt.Color(58, 159, 171));
 
@@ -323,10 +325,6 @@ public class ProveedoresPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(fecha_nac))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -341,7 +339,13 @@ public class ProveedoresPanel extends javax.swing.JPanel {
                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
                         .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nombres)))
+                        .addComponent(nombres))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel6Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(fechaProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(fecha_nac))))
                 .addContainerGap(30, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
@@ -366,7 +370,9 @@ public class ProveedoresPanel extends javax.swing.JPanel {
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
                     .addComponent(fecha_nac, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(130, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(fechaProveedores, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         fecha_nac.getAccessibleContext().setAccessibleName("");
@@ -487,6 +493,9 @@ public class ProveedoresPanel extends javax.swing.JPanel {
 
             Date date = new Date();
             String test = this.fecha_nac.getText(); //"02/03/2020";
+            SimpleDateFormat dformat=new SimpleDateFormat("dd/MM/yyyy");
+            //String test=dformat.format(fechaProveedores.getDate());
+            
             System.out.println("panel.fecha_nac.test: " + test);
             iguSDF.setLenient(false);
             try {
@@ -550,6 +559,7 @@ public class ProveedoresPanel extends javax.swing.JPanel {
     private igu.buttons.ASIconButton aSIconButton4;
     private javax.swing.JTextField buscarField;
     private igu.buttons.ASIconButton eliminarButton;
+    private com.toedter.calendar.JDateChooser fechaProveedores;
     private javax.swing.JTextField fecha_nac;
     private igu.buttons.ASIconButton guardarButton;
     private javax.swing.JLabel id;

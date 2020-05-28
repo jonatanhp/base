@@ -3,11 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package igu.clientes;
+package igu.productos;
 
-import data.CienteData;
+import data.ProductoData;
 import igu.tablas.ExportarExcel;
-import entites.Cliente;
+import entites.Producto;
 import igu.alertas.principal.ConfirmDialog;
 import igu.alertas.principal.ErrorAlert;
 import igu.alertas.principal.SuccessAlert;
@@ -31,17 +31,17 @@ import java.io.IOException;
  *
  * @author Asullom
  */
-public class ClientesPanel extends javax.swing.JPanel {
+public class ProductosPanel extends javax.swing.JPanel {
 
     ExportarExcel obj;
 
 
-    public ClientesPanel() {
+    public ProductosPanel() {
         initComponents();
         //AWTUtilities.setOpaque(this, false);
 
-        this.tabla.getTableHeader().setDefaultRenderer(new EstiloTablaHeader());
-        this.tabla.setDefaultRenderer(Object.class, new EstiloTablaRenderer());
+        this.productsTable.getTableHeader().setDefaultRenderer(new EstiloTablaHeader());
+        this.productsTable.setDefaultRenderer(Object.class, new EstiloTablaRenderer());
 
         jScrollPane1.getViewport().setBackground(new java.awt.Color(255, 255, 255));
         jScrollPane1.getVerticalScrollBar().setUI(new MyScrollbarUI());
@@ -50,17 +50,21 @@ public class ClientesPanel extends javax.swing.JPanel {
         this.id.setText("");
         paintTable("");
 
-        tabla.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tabla.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+        productsTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        productsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
             public void valueChanged(ListSelectionEvent e) {
-                if (tabla.getRowCount() > 0) {
-                    int[] row = tabla.getSelectedRows();
+                if (productsTable.getRowCount() > 0) {
+                    int[] row = productsTable.getSelectedRows();
                     if (row.length > 0) {
-                        String ids = (String) tabla.getValueAt(row[0], 1);
+                        String ids = (String) productsTable.getValueAt(row[0], 1);
                         id.setText("" + ids);
-                        String nombress = (String) tabla.getValueAt(row[0], 2);
-                        nombres.setText("" + nombress);
-                        String infoadics = (String) tabla.getValueAt(row[0], 3);
+                        String nombress = (String) productsTable.getValueAt(row[0], 2);
+                        productNameField.setText("" + nombress);
+                        String precios = (String) productsTable.getValueAt(row[0], 3);
+                        productNameField.setText("" + precios);
+                        //String cantidads = (String) productsTable.getValueAt(row[0], 4);
+                        //productNameField.setText("" + cantidads);
+                        String infoadics = (String) productsTable.getValueAt(row[0], 4);
                         infoadic.setText("" + infoadics);
                         System.out.println("Table element selected es: " + ids);
                         guardarButton.setText("MODIFICAR");
@@ -72,35 +76,40 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         });
 
-        this.nombres.requestFocus();
+        this.productNameField.requestFocus();
 
     }
 
     private void paintTable(String buscar) {
-        DefaultTableModel modelo = (DefaultTableModel) tabla.getModel();
-        List<Cliente> lis = CienteData.list(buscar);
+        DefaultTableModel modelo = (DefaultTableModel) productsTable.getModel();
+        List<Producto> lis = ProductoData.list(buscar);
         while (modelo.getRowCount() > 0) {
             modelo.removeRow(0);
         }
-        String datos[] = new String[4];
+        String datos[] = new String[6];
         int cont = 0;
-        for (Cliente d : lis) {
+        for (Producto d : lis) {
             //modelo.addRow(new Object[]{d.getId(), d.getNombres(), d.getInfoadic()});
-            datos[0] = ++cont + "";
+            datos[0] = ++cont+"";
             datos[1] = d.getId() + "";
-            datos[2] = d.getNombres();
-            datos[3] = d.getInfoadic();
+            datos[2] = d.getNombre() + "";
+            datos[3] = String.valueOf(d.getPrecio());
+            datos[4] = String.valueOf(d.getCantidad());
+            datos[5] = d.getInfo_adic();
             modelo.addRow(datos);
         }
-        tabla.getColumnModel().getColumn(0).setPreferredWidth(100);
-        tabla.getColumnModel().getColumn(1).setPreferredWidth(100);
-        tabla.getColumnModel().getColumn(2).setPreferredWidth(500);
-        tabla.getColumnModel().getColumn(3).setPreferredWidth(500);
+        productsTable.getColumnModel().getColumn(0).setPreferredWidth(100);
+        productsTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+        productsTable.getColumnModel().getColumn(2).setPreferredWidth(500);
+        productsTable.getColumnModel().getColumn(3).setPreferredWidth(500);
+        productsTable.getColumnModel().getColumn(4).setPreferredWidth(500);
     }
 
     private void limpiarCampos() {
-        this.nombres.requestFocus();
-        this.nombres.setText("");
+        this.productNameField.requestFocus();
+        this.productNameField.setText("");
+        this.priceProductField.setText("");
+        
         this.infoadic.setText("");
         paintTable("");
 
@@ -124,7 +133,7 @@ public class ClientesPanel extends javax.swing.JPanel {
         jPanel2 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tabla = new javax.swing.JTable();
+        productsTable = new javax.swing.JTable();
         jPanel3 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         nuevoButton = new igu.buttons.ASIconButton();
@@ -133,16 +142,20 @@ public class ClientesPanel extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         infoadic = new javax.swing.JTextArea();
         jLabel3 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        nombres = new javax.swing.JTextField();
+        productNameLabel = new javax.swing.JLabel();
+        productNameField = new javax.swing.JTextField();
         id = new javax.swing.JLabel();
+        productsquantityLabel = new javax.swing.JLabel();
+        producQuantity = new javax.swing.JSpinner();
+        productPriceLabel = new javax.swing.JLabel();
+        priceProductField = new javax.swing.JTextField();
 
         jPanel5.setBackground(new java.awt.Color(58, 159, 171));
 
         jPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
         jLabel1.setFont(new java.awt.Font("Tahoma", 0, 24)); // NOI18N
-        jLabel1.setText("CLIENTES");
+        jLabel1.setText("PRODUCTOS");
 
         buscarField.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
         buscarField.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -171,7 +184,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(52, 52, 52)
                 .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 554, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 523, Short.MAX_VALUE)
                 .addComponent(jLabel4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buscarField, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -198,29 +211,30 @@ public class ClientesPanel extends javax.swing.JPanel {
 
         jPanel4.setBackground(new java.awt.Color(58, 159, 171));
 
-        tabla.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
-        tabla.setModel(new javax.swing.table.DefaultTableModel(
+        productsTable.setFont(new java.awt.Font("Tahoma", 0, 16)); // NOI18N
+        productsTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "Nº", "ID", "NOMBRES", "INFORMACIÓN ADIC"
+                "ID", "NOMBRE", "PRECIO", "CANTIDAD", "INFO ADIC"
             }
         ) {
             boolean[] canEdit = new boolean [] {
-                false, false, false, false
+                false, false, false, false, true
             };
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tabla.setDoubleBuffered(true);
-        tabla.setRowHeight(25);
-        jScrollPane1.setViewportView(tabla);
+        productsTable.setDoubleBuffered(true);
+        productsTable.setRowHeight(25);
+        jScrollPane1.setViewportView(productsTable);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -234,7 +248,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel4Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 381, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -291,12 +305,24 @@ public class ClientesPanel extends javax.swing.JPanel {
         jLabel3.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
         jLabel3.setText("Información adicional:");
 
-        jLabel2.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
-        jLabel2.setText("Nombres del cliente: ");
+        productNameLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        productNameLabel.setText("Nombre del producto:");
 
-        nombres.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        productNameField.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
 
         id.setText("id");
+
+        productsquantityLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        productsquantityLabel.setText("Cantidad:");
+
+        productPriceLabel.setFont(new java.awt.Font("Tahoma", 0, 14)); // NOI18N
+        productPriceLabel.setText("Precio:");
+
+        priceProductField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                priceProductFieldActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -304,7 +330,7 @@ public class ClientesPanel extends javax.swing.JPanel {
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel6Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel6Layout.createSequentialGroup()
                         .addComponent(nuevoButton, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -314,14 +340,22 @@ public class ClientesPanel extends javax.swing.JPanel {
                         .addGap(27, 27, 27)
                         .addComponent(id))
                     .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel6Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(nombres)))
-                .addContainerGap(30, Short.MAX_VALUE))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(productNameLabel)
+                            .addComponent(productPriceLabel)
+                            .addComponent(jLabel3)
+                            .addComponent(productsquantityLabel))
+                        .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
+                                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(productNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 283, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(producQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(priceProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(jPanel6Layout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 287, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(23, Short.MAX_VALUE))
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -335,14 +369,28 @@ public class ClientesPanel extends javax.swing.JPanel {
                         .addComponent(guardarButton, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(nombres, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
+                    .addComponent(productNameField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(productNameLabel))
+                .addGap(28, 28, 28)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(productPriceLabel)
+                    .addComponent(priceProductField, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(producQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(productsquantityLabel))
                 .addGroup(jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel3)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(180, Short.MAX_VALUE))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addGap(59, 59, 59))
+                    .addGroup(jPanel6Layout.createSequentialGroup()
+                        .addGap(35, 35, 35)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 83, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
+
+        productPriceLabel.getAccessibleContext().setAccessibleName("productPriceLabel");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -394,7 +442,7 @@ public class ClientesPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void eliminarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_eliminarButtonActionPerformed
-        if (this.tabla.getRowCount() < 1) {
+        if (this.productsTable.getRowCount() < 1) {
             ErrorAlert er = new ErrorAlert(new JFrame(), true);
             er.titulo.setText("OOPS...");
             er.msj.setText("LA TABLA ESTA VACÍA");
@@ -416,11 +464,12 @@ public class ClientesPanel extends javax.swing.JPanel {
                 cd.msj1.setText("");
                 cd.setVisible(true);
                 if (cd.YES_OPTION) {
-                    int opcion = CienteData.eliminar(Integer.parseInt(this.id.getText()));
+                    int opcion = ProductoData.eliminar(Integer.parseInt(this.id.getText()));
                     if (opcion != 0) {
                         limpiarCampos();
                         this.id.setText("");
-                        this.nombres.setText("");
+                        this.productNameField.setText("");
+                        this.priceProductField.setText("");
                         this.infoadic.setText("");
                         this.guardarButton.setText("REGISTRAR");
                     }
@@ -435,15 +484,15 @@ public class ClientesPanel extends javax.swing.JPanel {
         //this.tituloLabel.setText("REGISTRAR");
         this.guardarButton.setText("REGISTRAR");
         this.id.setText("");
-        this.nombres.setText("");
+        this.productNameField.setText("");
         this.infoadic.setText("");
-        this.nombres.requestFocus();
+        this.productNameField.requestFocus();
 
     }//GEN-LAST:event_nuevoButtonActionPerformed
 
     private void guardarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_guardarButtonActionPerformed
 
-        if (this.nombres.getText().equals("")) {
+        if (this.productNameField.getText().equals("")) {
             ErrorAlert er = new ErrorAlert(new JFrame(), true);
             er.titulo.setText("OOPS...");
             er.msj.setText("FALTAN CAMPOS POR LLENAR");
@@ -453,12 +502,15 @@ public class ClientesPanel extends javax.swing.JPanel {
         } else {
 
             System.out.println("id: " + this.id.getText());
-            Cliente s = new Cliente();
+            Producto s = new Producto();
 
-            s.setNombres(this.nombres.getText());
-            s.setInfoadic(this.infoadic.getText());
+            s.setNombre(this.productNameField.getText());
+            s.setPrecio(Double.parseDouble(this.priceProductField.getText()));
+            s.setCantidad((int) this.producQuantity.getValue());
+            s.setInfo_adic(this.infoadic.getText());
+            
             if (this.id.getText().equals("")) {
-                int opcion = CienteData.registrar(s);
+                int opcion = ProductoData.registrar(s);
                 if (opcion != 0) {
                     limpiarCampos();
                     SuccessAlert sa = new SuccessAlert(new JFrame(), true);
@@ -469,7 +521,7 @@ public class ClientesPanel extends javax.swing.JPanel {
                 }
             } else {
                 s.setId(Integer.parseInt(this.id.getText()));
-                int opcion = CienteData.actualizar(s);
+                int opcion = ProductoData.actualizar(s);
                 if (opcion != 0) {
                     limpiarCampos();
                     SuccessAlert sa = new SuccessAlert(new JFrame(), true);
@@ -486,9 +538,9 @@ public class ClientesPanel extends javax.swing.JPanel {
     private void aSIconButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_aSIconButton4ActionPerformed
         try {
             obj = new ExportarExcel();
-            obj.exportarExcel(tabla);
+            obj.exportarExcel(productsTable);
         } catch (IOException ex) {
-            Logger.getLogger(ClientesPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductosPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_aSIconButton4ActionPerformed
 
@@ -497,6 +549,10 @@ public class ClientesPanel extends javax.swing.JPanel {
         //Opciones.listar(this.buscarField.getText());
         paintTable(this.buscarField.getText());
     }//GEN-LAST:event_buscarFieldKeyReleased
+
+    private void priceProductFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_priceProductFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_priceProductFieldActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -507,7 +563,6 @@ public class ClientesPanel extends javax.swing.JPanel {
     private javax.swing.JLabel id;
     private javax.swing.JTextArea infoadic;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
@@ -518,8 +573,13 @@ public class ClientesPanel extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel6;
     public static javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTextField nombres;
     private igu.buttons.ASIconButton nuevoButton;
-    public static javax.swing.JTable tabla;
+    private javax.swing.JTextField priceProductField;
+    private javax.swing.JSpinner producQuantity;
+    private javax.swing.JTextField productNameField;
+    private javax.swing.JLabel productNameLabel;
+    private javax.swing.JLabel productPriceLabel;
+    public static javax.swing.JTable productsTable;
+    private javax.swing.JLabel productsquantityLabel;
     // End of variables declaration//GEN-END:variables
 }

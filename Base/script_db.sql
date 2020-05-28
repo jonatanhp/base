@@ -39,6 +39,16 @@ CREATE TABLE IF NOT EXISTS proveedor (
 	last_updated datetime default current_timestamp
 );
 
+CREATE TABLE IF NOT EXISTS producto (
+	id		     INTEGER PRIMARY KEY AUTOINCREMENT,
+	nombre	     TEXT	NOT NULL,
+	precio 	     TEXT  NOT NULL,
+	cantidad        TEXT  NOT NULL,	
+     infoadic	     TEXT	NULL,
+	fecha_reg	datetime	NULL,
+	
+);
+
 CREATE TABLE IF NOT EXISTS prove_mov (
 	id			INTEGER PRIMARY KEY AUTOINCREMENT,
 	fecha		datetime	NOT NULL,

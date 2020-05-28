@@ -5,14 +5,12 @@
  */
 package data;
 
-import entites.Proveedor;
-import igu.util.Config;
+import entites.Producto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -23,32 +21,30 @@ import org.sqlite.SQLiteConfig;
 
 /**
  *
- * @author Asullom
+ * @author jonatan
  */
-public class ProveedorData {
-
+public class ProductoData {
     static Connection cn = Conn.connectSQLite();
     static PreparedStatement ps;
     static Date dt = new Date();
     static SimpleDateFormat sdf = new SimpleDateFormat(SQLiteConfig.DEFAULT_DATE_STRING_FORMAT);
-    //static SimpleDateFormat sdf_p = new SimpleDateFormat(Conn.DEFAULT_DATE_STRING_FORMAT_PE);
-    //String fecha = sdf_p.format(d.getFecha_nac());
-    public static int registrar(Proveedor d) {
+    
+    public static int registrar(Producto d) {
         String currentTime = sdf.format(dt);
         System.out.print("currentTime:" + currentTime);
         int rsu = 0;
-        String sql = "INSERT INTO proveedor(nombres, infoadic, fecha_nac, date_created) "
+        String sql = "INSERT INTO producto(nombre, precio,cantidad , infoadic ) "
                 + "VALUES(?,?,?,?)";
         int i = 0;
         try {
-            System.out.print("registrar.getFecha_nac:" + d.getFecha_nac());
-            String fecha = sdf.format(d.getFecha_nac());
-            System.out.println("registrar.fecha:" + fecha);
+           
+            //String fecha = sdf.format(d.getFecha_reg());
+            
             ps = cn.prepareStatement(sql);
-            ps.setString(++i, d.getNombres());
-            ps.setString(++i, d.getInfoadic());
-            ps.setString(++i, fecha);
-            ps.setString(++i, sdf.format(dt));
+            ps.setString(++i, d.getNombre());
+            ps.setString(++i, String.valueOf(d.getPrecio()));
+            ps.setString(++i, String.valueOf(d.getCantidad()));
+            ps.setString(++i, d.getInfo_adic());
             rsu = ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.print("registrar.ex:" + ex);
@@ -56,30 +52,31 @@ public class ProveedorData {
         }
         return rsu;
     }
-
-    public static int actualizar(Proveedor d) {
+    
+    public static int actualizar(Producto d) {
         int rsu = 0;
-        String sql = "UPDATE proveedor SET "
-                + "nombres=?, "
-                + "infoadic=?, "
-                + "fecha_nac=? "
+        String sql = "UPDATE producto SET "
+                + "nombre=?, "
+                + "precio=?, "
+                + "cantidad=? "
                 //+ "last_update=? "
                 + "WHERE id=?";
         int i = 0;
         try {
-             System.out.println("actualizar.getFecha_nac:" + d.getFecha_nac());
+             
              String fecha = sdf.format(dt);
              try {
-                fecha = sdf.format(d.getFecha_nac());
+                fecha = sdf.format(d.getFecha_reg());
             } catch (Exception e) {
-                System.out.println("actualizar.getFecha_nac format:" + fecha);
+                System.out.println("actualizar.getFecha_reg format:" + fecha);
             }
             System.out.println("actualizar.fecha:" + fecha);
             
             ps = cn.prepareStatement(sql);
-            ps.setString(++i, d.getNombres());
-            ps.setString(++i, d.getInfoadic());
-            ps.setString(++i, fecha);
+            ps.setString(++i, d.getNombre());
+            ps.setString(++i, String.valueOf(d.getPrecio()));
+            ps.setString(++i, String.valueOf(d.getCantidad()));
+            ps.setString(++i, d.getInfo_adic());
             
             //ps.setString(++i, sdf.format(dt));
             ps.setInt(++i, d.getId());
@@ -89,12 +86,13 @@ public class ProveedorData {
         }
         return rsu;
     }
-
+    
     public static int eliminar(int id) {
         int rsu = 0;
-        String sql = "DELETE FROM proveedor WHERE id = ?";
+        String sql = "DELETE FROM producto WHERE id = ?";
         try {
             ps = cn.prepareStatement(sql);
+            
             ps.setInt(1, id);
             rsu = ps.executeUpdate();
         } catch (SQLException ex) {
@@ -102,37 +100,39 @@ public class ProveedorData {
         }
         return rsu;
     }
-
-    public static List<Proveedor> list(String busca) {
-        List<Proveedor> ls = new ArrayList<Proveedor>();
+    
+      public static List<Producto> list(String busca) {
+        List<Producto> ls = new ArrayList<Producto>();
         //sql = "SELECT *,strftime('%d/%m/%Y',fecha_nac ) as fecha_nac2 FROM proveedor ORDER BY id";
         String sql = "";
         if (busca.equals("")) {
-            sql = "SELECT * FROM proveedor ORDER BY id";
+            sql = "SELECT * FROM producto ORDER BY id";
         } else {
-            sql = "SELECT * FROM proveedor WHERE (id LIKE'" + busca + "%' OR "
-                    + "nombres LIKE'" + busca + "%' OR infoadic LIKE'" + busca + "%' OR "
-                    + "id LIKE'" + busca + "%') "
+            sql = "SELECT * FROM producto WHERE (id LIKE'" + busca + "%' OR "
+                    + "nombre LIKE'" + busca + "%' OR precio LIKE'" + busca + "%' OR "
+                    + "cantidad LIKE'" + busca + "%') "
                     + "ORDER BY nombres";
         }
         try {
             Statement st = cn.createStatement();
             ResultSet rs = st.executeQuery(sql);
             while (rs.next()) {
-                Proveedor d = new Proveedor();
+                Producto d = new Producto();
                 d.setId(rs.getInt("id"));
-                d.setNombres(rs.getString("nombres"));
-                d.setInfoadic(rs.getString("infoadic"));
+                d.setNombre(rs.getString("nombre"));
+                d.setPrecio(rs.getDouble("precio"));
+                d.setCantidad(rs.getInt("cantidad"));
+                d.setInfo_adic(rs.getString("infoadic"));
                 //String fecha = sdf_p.format(rs.getDate("fecha_nac"));
-                String fecha = rs.getString("fecha_nac");
-                System.out.println("list.fecha:" + fecha);
+                //String fecha = rs.getString("fecha_nac");
+                //System.out.println("list.fecha:" + fecha);
                 try {
-                    Date date = sdf.parse(fecha);
-                    System.out.println("list.date:" + date);
-                    d.setFecha_nac(date);
+                   // Date date = sdf.parse(fecha);
+                   // System.out.println("list.date:" + date);
+                   // d.setFecha_reg(date);
 
-                    d.setDate_created(sdf.parse(rs.getString("date_created")));
-                    d.setLast_updated(sdf.parse(rs.getString("last_updated")));
+                    //d.setDate_created(sdf.parse(rs.getString("date_created")));
+                    //d.setLast_updated(sdf.parse(rs.getString("last_updated")));
                 } catch (Exception e) {
                 }
                 ls.add(d);
